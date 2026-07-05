@@ -11,11 +11,11 @@ import (
 
 func main() {
 
-	ctx := context.Background()
-	inmemRepo := repository.NewInmemRepository()
-	svc := service.NewService(inmemRepo)
+	ctx := context.Background()                  // 创建上下文
+	inmemRepo := repository.NewInmemRepository() // 初始化内存数据库
+	svc := service.NewService(inmemRepo)         // 初始化service，注入内存数据库依赖
 
-	fare := &domain.RideFareModel{
+	fare := &domain.RideFareModel{ // 创建 行程费模型
 		UserID: "42",
 	}
 	t, err := svc.CreateTrip(ctx, fare)

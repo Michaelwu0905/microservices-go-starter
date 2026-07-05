@@ -11,13 +11,19 @@ var (
 	httpAddr = env.GetString("HTTP_ADDR", ":8081")
 )
 
-func main() {
+func main() { // 负责启动 http 服务器、注册路由
 	log.Println("Starting API Gateway")
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("Hello from API Gateway"))
-	})
+	mux := http.NewServeMux() // 创建一个路由器
 
-	http.ListenAndServe(httpAddr, nil)
+	mux.HandleFunc("POST /trip/preview", handleTripPreview) // 注册接口 POST /trip/preview
+
+	server := &http.Server{ // 创建http server，默认监听8081端口
+		Addr:    httpAddr,
+		Handler: mux,
+	}
+
+	if err := server.ListenAndServe(); err != nil {
+		log.Printf("HTTP server error: %v", err)
+	}
 }
